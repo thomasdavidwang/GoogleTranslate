@@ -1,0 +1,22 @@
+var http = require("http"),
+        fs = require("fs"),
+        formidable = require("formidable");
+
+http.createServer((req,res) => {
+        fs.readFile("template1.html", (err,data) => {
+                if(req.url == "/fileupload") {
+                        var form = new formidable.IncomingForm();
+
+    			form.parse(req);
+
+    			form.on('fileBegin', function (name, file){
+    			    file.path = __dirname + '/uploads/' + file.name;
+    			});
+
+                } else {
+                        res.writeHead(200, {'Content-Type': 'text/html'});
+                        res.write(data);
+                        res.end();
+                }
+        });
+}).listen(8080);
